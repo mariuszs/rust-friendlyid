@@ -29,25 +29,14 @@ fn main() {
     let i = my_uuid.as_u128();
     println!("xxxx... = {}", i);
     // println!("bigint... = {}", my_uuid.as_bytes().);
-    //
-    // // let high: u64 = (i >> 64) as u64;
-    // // let low: u64 = i as u64;
-    // let mostSignificantBits: u64 = i.hi();
-    // let leastSignificantBits: u64 = i.lo();
-    // let jeden: u128 = 1;
-    //
-    // println!("xxxx... = {} - {}", leastSignificantBits, mostSignificantBits);
-    // println!("xx... = {} - {}", jeden, (jeden << 64));
-    // let i1 = (jeden << 64) as u64;
-    // let ttt = (i1.mul(  mostSignificantBits));
-    // let x = ttt.add(leastSignificantBits);
-    // println!("ca... = {} ", x);
 
 
     println!("bigint... = {}", my_uuid.as_u128().to_biguint().unwrap());
     println!("uuid... = {}", encode(&my_uuid));
-
-
+    println!("dec... = {}", decodeBase62("5wbwf6yUxVBcr48AMbz9cb".to_string()));
+    println!("dec... = {}", decode("5wbwf6yUxVBcr48AMbz9cb".to_string()));
+    // println!("dec... = {}", decodeBase62("A".to_string()));
+    // println!("dec... = {}", decodeBase62("3844".to_string()));
 }
 
 fn encode(uuid: &Uuid) -> String {
@@ -57,14 +46,6 @@ fn encode(uuid: &Uuid) -> String {
 }
 
 
-fn decode(id: &String) -> Uuid {
-    // return Uuid::parse_str(id).unwrap();
-    // let decoded: BigInteger = Base62::decode(&id);
-    base_62::decode(&id);
-    return Uuid::parse_str(id).unwrap();
-    // return UuidConverter::to_uuid(decoded);
-}
-
 fn base62(number: u128) -> String {
     let alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     let mut n = number;
@@ -72,14 +53,47 @@ fn base62(number: u128) -> String {
 
     let mut ret = String::from("");
 
-    while n > u128::MIN {
-        let temp = ( n % basis) as usize;
+    while n > 0 {
+        let temp = (n % basis) as usize;
         let x = alphabet.chars().nth(temp).unwrap();
-        // ret = concat!(x.to_string(), ret).to_string();
         ret = [x.to_string(), ret].concat();
         n = n / basis;
     }
     return ret.to_string();
 }
+
+fn decode(id: String) -> Uuid {
+    let decode_base62 = decodeBase62(id.to_string());
+    return Uuid::from_u128(decode_base62);
+}
+
+
+fn decodeBase62(string: String) -> u128 {
+    let alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let base = 62;
+    let strlen = string.len() as u128;
+    println!("strlen... = {}", strlen);
+    let mut num = 0 as u128;
+    let mut idx = 0 as u128;
+
+    for char in string.chars() {
+        println!("char = '{}'", char);
+        let power = (strlen - (idx + 1)) as u32 ;
+        println!("power... = {}", power);
+        let i = u128::pow(base, power) as u128;
+        println!("i... = {}", i);
+        // let i = base.pow(power);
+        // let i1 = alphabet.chars().position(|c| c == char).unwrap() as u128;
+        // let i1 = alphabet.find(char).unwrap() as u128;
+        // println!("i1 = {}", i1);
+         num = alphabet.find(char).unwrap() as u128 * i + num;
+        println!("num = {}", num);
+         idx = idx + 1;
+        println!("idx = {}", idx);
+    }
+
+    return num;
+}
+
 
 
