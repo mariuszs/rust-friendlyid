@@ -1,0 +1,12 @@
+[package]
+name = "rust-friendlyid"
+version = "0.1.0"
+authors = ["Mariusz Smykuła <mariusz@devskiller.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base-62 = "0.1.1"
+uuid = { version = "0.8.1", features = ["v4"] }
+num-bigint = "0.3.0"
