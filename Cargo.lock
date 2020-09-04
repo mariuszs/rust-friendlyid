@@ -62,6 +62,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "friendlyid"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "uuid",
+]
+
+[[package]]
 name = "getrandom"
 version = "0.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -216,14 +224,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ca3129af7b92a17112d59ad498c6f81eaf463253766b90396d39ea7a39d6613c"
 dependencies = [
  "rand_core",
-]
-
-[[package]]
-name = "rust-friendlyid"
-version = "0.1.0"
-dependencies = [
- "clap",
- "uuid",
 ]
 
 [[package]]

@@ -2,13 +2,12 @@ use clap::{App, Arg};
 use uuid::Uuid;
 
 fn main() {
-
     let matches = App::new("FriendlyId App")
         .version("0.1.0")
         .author("Mariusz Smykula <mariuszs@gmail.com>")
         .about("FriendlyId converter")
-        .arg(Arg::with_name("UUID")
-            .about("UUID to convert")
+        .arg(Arg::with_name("ID")
+            .about("ID to convert")
             .required(true)
             .index(1))
         .arg(Arg::with_name("decode")
@@ -18,13 +17,17 @@ fn main() {
             .about("Decode friendlyId"))
         .get_matches();
 
+    let id = matches.value_of("ID").expect("Missing id!");
+
     if matches.is_present("decode") {
-        let id = matches.value_of("UUID").expect("Missing id!");
-        println!("UUID: {}", decode(id.to_string()));
+        println!("{}", decode(id.to_string()));
     } else {
-        let uuid = matches.value_of("UUID").expect("Missing uuid!");
-        let my_uuid = Uuid::parse_str(uuid).unwrap();
-        println!("ID: {}", encode(&my_uuid));
+        if id.contains("-") {
+            let my_uuid = Uuid::parse_str(id).expect("Invalid uuid format!");
+            println!("{}", encode(&my_uuid));
+        } else {
+            println!("{}", decode(id.to_string()));
+        }
     }
 }
 
