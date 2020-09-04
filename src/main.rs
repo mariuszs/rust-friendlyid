@@ -1,11 +1,31 @@
+use clap::{App, Arg};
 use uuid::Uuid;
 
 fn main() {
-    let my_uuid = Uuid::parse_str("c3587ec5-0976-497f-8374-61e0c2ea3da5").unwrap();
 
-    println!("uuid... = {}", encode(&my_uuid));
-    println!("dec... = {}", decode_base_62("5wbwf6yUxVBcr48AMbz9cb".to_string()));
-    println!("dec... = {}", decode("5wbwf6yUxVBcr48AMbz9cb".to_string()));
+    let matches = App::new("FriendlyId App")
+        .version("0.1.0")
+        .author("Mariusz Smykula <mariuszs@gmail.com>")
+        .about("FriendlyId converter")
+        .arg(Arg::with_name("UUID")
+            .about("UUID to convert")
+            .required(true)
+            .index(1))
+        .arg(Arg::with_name("decode")
+            .short('d')
+            .long("decode")
+            .takes_value(false)
+            .about("Decode friendlyId"))
+        .get_matches();
+
+    if matches.is_present("decode") {
+        let id = matches.value_of("UUID").expect("Missing id!");
+        println!("UUID: {}", decode(id.to_string()));
+    } else {
+        let uuid = matches.value_of("UUID").expect("Missing uuid!");
+        let my_uuid = Uuid::parse_str(uuid).unwrap();
+        println!("ID: {}", encode(&my_uuid));
+    }
 }
 
 fn encode(uuid: &Uuid) -> String {
