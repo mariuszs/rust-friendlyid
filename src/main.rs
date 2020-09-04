@@ -1,11 +1,12 @@
+use std::convert::TryFrom;
+use std::convert::TryInto;
 // use num_traits::{Zero, One};
 use std::mem::replace;
+use std::ops::{Add, Mul};
 
 use num_bigint::{BigUint, ToBigUint};
 use uuid::Uuid;
-use std::ops::{Add, Mul};
-use std::convert::TryInto;
-use std::convert::TryFrom;
+
 mod UuidConverter;
 mod Url62;
 
@@ -46,31 +47,17 @@ fn main() {
     println!("bigint... = {}", my_uuid.as_u128().to_biguint().unwrap());
     println!("uuid... = {}", encode(&my_uuid));
 
-    // let mut f0: BigUint = Zero::zero();
 
-
-    // println!("Foo = {}", decode(&greeting))
-    //
-    // // Parse an existing UUID
-    // let uuid = Uuid::parse_str("95022733-f013-301a-0ada-abc18f151006").unwrap();
-    // show_uuid(&uuid);
 }
 
 fn encode(uuid: &Uuid) -> String {
-    // let pair: BigInteger = UuidConverter::to_big_integer(uuid);
-    // return Base62::encode(pair);
-
-    let data = uuid.as_u128().to_ne_bytes().to_vec();
-    // let data = vec.expect("Unable to read data");
-    // f.write_all(&data).expect("Unable to write data");
-    let base62 = base_62::encode(&data);
-
-
+    let data = uuid.as_u128();
+    let base62 = base62(data);
     return base62.to_string();
 }
 
 
-pub fn decode(id: &String) -> Uuid {
+fn decode(id: &String) -> Uuid {
     // return Uuid::parse_str(id).unwrap();
     // let decoded: BigInteger = Base62::decode(&id);
     base_62::decode(&id);
@@ -78,24 +65,21 @@ pub fn decode(id: &String) -> Uuid {
     // return UuidConverter::to_uuid(decoded);
 }
 
-fn show_uuid(uuid: &Uuid) {
-    println!("bytes: {:?}", uuid.as_bytes());
-    println!("simple: {}", uuid.to_simple());
-    println!("hyphenated: {}", uuid.to_hyphenated());
-    println!("urn: {}", uuid.to_urn());
+fn base62(number: u128) -> String {
+    let alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let mut n = number;
+    let basis = 62;
+
+    let mut ret = String::from("");
+
+    while n > u128::MIN {
+        let temp = ( n % basis) as usize;
+        let x = alphabet.chars().nth(temp).unwrap();
+        // ret = concat!(x.to_string(), ret).to_string();
+        ret = [x.to_string(), ret].concat();
+        n = n / basis;
+    }
+    return ret.to_string();
 }
 
-trait LoHi {
-    type Output;
 
-    fn lo(&self) -> Self::Output;
-    fn hi(&self) -> Self::Output;
-}
-
-
-impl LoHi for u128 {
-    type Output = u64;
-
-    fn lo(&self) -> Self::Output { *self as u64 }
-    fn hi(&self) -> Self::Output { (*self >> 64) as u64 }
-}
