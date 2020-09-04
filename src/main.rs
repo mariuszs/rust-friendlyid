@@ -2,10 +2,10 @@ use clap::{App, Arg};
 use uuid::Uuid;
 
 fn main() {
-    let matches = App::new("FriendlyId App")
+    let matches = App::new("FriendlyId Converter")
         .version("0.1.0")
         .author("Mariusz Smykula <mariuszs@gmail.com>")
-        .about("FriendlyId converter")
+        .about("The FriendlyID library converts a given UUID to a URL-friendly ID which is based on Base62")
         .arg(Arg::with_name("ID")
             .about("ID to convert")
             .required(true)
