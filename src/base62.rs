@@ -25,7 +25,6 @@ pub fn encode(mut num: u128) -> String {
     String::from_utf8(bytes).unwrap()
 }
 
-
 pub enum DecodeError {
     InvalidBase62Byte(char, usize),
     ArithmeticOverflow,
