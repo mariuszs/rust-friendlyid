@@ -1,4 +1,4 @@
-use clap::{crate_version, App, Arg};
+use clap::{crate_version, crate_authors, App, Arg};
 use uuid::Uuid;
 
 mod friendly_id;
@@ -7,7 +7,7 @@ mod base62;
 fn main() {
     let matches = App::new("FriendlyId Converter")
         .version(crate_version!())
-        .author("Mariusz Smykula <mariuszs@gmail.com>")
+        .author(crate_authors!("\n"))
         .about("The FriendlyID library converts a given UUID to a URL-friendly ID which is based on Base62")
         .arg(Arg::with_name("ID")
             .help("UUID to convert or ID to decode")

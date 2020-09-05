@@ -1,5 +1,4 @@
 use uuid::Uuid;
-
 use crate::base62;
 
 pub fn encode(uuid: &Uuid) -> String {
