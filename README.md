@@ -33,15 +33,13 @@ The FriendlyID application that converts a given UUID to a URL-friendly ID which
 
 ## Installation
 
-### Linux
-
-#### Build from the source using cargo and rustc
+### Build from the source using cargo and rustc
 
     cargo build --release
     
-#### Download binary from github    
+#### Download binary from github (linux or windows)   
 
-Use binary `friendlyid` downloaded from https://github.com/mariuszs/rust-friendlyid/releases
+Use binary `friendlyid` or `friendlyid.exe` downloaded from https://github.com/mariuszs/rust-friendlyid/releases
 
 #### Use package appropriate for your linux distribution (RPM or DEB)
 
