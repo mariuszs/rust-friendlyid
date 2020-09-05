@@ -17,6 +17,7 @@ lto = true
 [dependencies]
 uuid = { version = "0.8.1", features = ["v4"] }
 clap = "2.33.3"
+friendly_id = "0.1.0"
 [package.metadata.rpm]
 package = "friendlyid"
 

@@ -1,8 +1,7 @@
 use clap::{crate_version, crate_authors, App, Arg};
 use uuid::Uuid;
+use friendly_id;
 
-mod friendly_id;
-mod base62;
 
 fn main() {
     let matches = App::new("FriendlyId Converter")
