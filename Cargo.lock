@@ -100,9 +100,9 @@ dependencies = [
 
 [[package]]
 name = "friendly_id"
-version = "0.2.0"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2258cec73649b6e1cd331d3fb14b191d2b4a57759edc60c0f0f3a00e1e80a44c"
+checksum = "4b55cce70443eeb0bca2533b439324e3096dee8f0e3ebdfa7f8e61263103da81"
 dependencies = [
  "failure",
  "uuid",

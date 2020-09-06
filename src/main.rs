@@ -30,7 +30,7 @@ fn convert(id: &str) -> String {
             Err(error) => panic!("Invalid uuid '{}': {:?}", id, error)
         };
     } else {
-        match friendly_id::decode(id.to_string()) {
+        match friendly_id::decode(id) {
             Ok(uuid) => return uuid.to_string(),
             Err(error) => panic!("Invalid id '{}': {:?}", id, error)
         }
