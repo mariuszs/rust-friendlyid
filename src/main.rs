@@ -8,7 +8,7 @@ fn main() {
         .author(crate_authors!("\n"))
         .about("The FriendlyID library converts a given UUID to a URL-friendly ID which is based on Base62")
         .arg(Arg::with_name("ID")
-            .help("UUID to convert or ID to decode")
+            .help("UUID to encode or ID to decode")
             .required(false)
             .index(1))
         .get_matches();
@@ -36,7 +36,6 @@ fn convert(id: &str) -> String {
         }
     }
 }
-
 
 fn print(id: String) {
     println!("{}", id)
