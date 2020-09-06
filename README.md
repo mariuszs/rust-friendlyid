@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/mariuszs/rust-friendlyid.svg?branch=master)](https://travis-ci.com/mariuszs/rust-friendlyid)
 # friendlyid converter
 The FriendlyID application that converts a given UUID to a URL-friendly ID which is based on Base62
 
