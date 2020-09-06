@@ -20,7 +20,7 @@ The FriendlyID application that converts a given UUID to a URL-friendly ID which
 
     $ friendlyid -h                                                                                                                                        ✔ 
     FriendlyId Converter 0.1.0
-    Mariusz Smykula <mariuszs@gmail.com>
+    
     The FriendlyID library converts a given UUID to a URL-friendly ID which is based on Base62
 
     USAGE:
