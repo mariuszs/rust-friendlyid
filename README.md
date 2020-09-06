@@ -43,7 +43,8 @@ The FriendlyID application that converts a given UUID to a URL-friendly ID which
 
 ### Build from the source using cargo and rustc
 
-    $ cargo build --release
+    $ cd rust-friendlyid
+    $ cargo install --path . 
     
 #### Download binary from github (linux or windows)   
 
