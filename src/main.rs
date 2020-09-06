@@ -13,10 +13,10 @@ fn main() {
             .index(1))
         .get_matches();
     let id = match matches.value_of("ID") {
-        Some(id) => String::from(convert(id)),
+        Some(id) => String::from(   convert(id)),
         None => create(),
     };
-    print(id);
+    println!("{}", id);
 }
 
 fn create() -> String {
@@ -37,10 +37,6 @@ fn convert(id: &str) -> String {
     }
 }
 
-fn print(id: String) {
-    println!("{}", id)
-}
-
 #[cfg(test)]
 mod tests {
     use crate::{convert, create};
@@ -59,7 +55,7 @@ mod tests {
 
     #[test]
     fn test_create() {
-        assert_eq!(create().is_empty(), false);
+        assert!(!create().is_empty());
     }
 }
 
