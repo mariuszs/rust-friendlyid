@@ -11,31 +11,58 @@ fn main() {
             .help("UUID to convert or ID to decode")
             .required(false)
             .index(1))
-        .arg(Arg::with_name("decode")
-            .short("d")
-            .long("decode")
-            .takes_value(false)
-            .help("Decode friendlyId"))
         .get_matches();
+    let id = match matches.value_of("ID") {
+        Some(id) => String::from(convert(id)),
+        None => create(),
+    };
+    print(id);
+}
 
-    match matches.value_of("ID") {
-        None => println!("{}", friendly_id::create()),
-        Some(id) => {
-            if matches.is_present("decode") {
-                println!("{}", friendly_id::decode(id.to_string()));
-            } else {
-                if id.contains("-") {
-                    let my_uuid = Uuid::parse_str(id).expect("Invalid uuid format!");
-                    println!("{}", friendly_id::encode(&my_uuid));
-                } else {
-                    println!("{}", friendly_id::decode(id.to_string()));
-                }
-            }
+fn create() -> String {
+    friendly_id::create()
+}
+
+fn convert(id: &str) -> String {
+    if id.contains("-") {
+        match Uuid::parse_str(&id) {
+            Ok(uuid) => return friendly_id::encode(&uuid),
+            Err(error) => panic!("Invalid uuid '{}': {:?}", id, error)
+        };
+    } else {
+        match friendly_id::decode(id.to_string()) {
+            Ok(uuid) => return uuid.to_string(),
+            Err(error) => panic!("Invalid id '{}': {:?}", id, error)
         }
     }
 }
 
 
+fn print(id: String) {
+    println!("{}", id)
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{convert, create};
+
+    #[test]
+    fn test_decode() {
+        assert_eq!(convert("5wbwf6yUxVBcr48AMbz9cb"),
+                   "c3587ec5-0976-497f-8374-61e0c2ea3da5");
+    }
+
+    #[test]
+    fn test_encode() {
+        assert_eq!(convert("c3587ec5-0976-497f-8374-61e0c2ea3da5"),
+                   "5wbwf6yUxVBcr48AMbz9cb");
+    }
+
+    #[test]
+    fn test_create() {
+        assert_eq!(create().is_empty(), false);
+    }
+}
 
 
 

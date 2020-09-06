@@ -1,6 +1,6 @@
 [package]
 name = "friendlyid"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Mariusz Smykuła <mariusz@devskiller.com>"]
 edition = "2018"
 license = "MIT OR Apache-2.0"
@@ -16,8 +16,9 @@ lto = true
 
 [dependencies]
 uuid = { version = "0.8.1", features = ["v4"] }
+friendly_id = "0.2.0"
 clap = "2.33.3"
-friendly_id = "0.1.2"
+
 [package.metadata.rpm]
 package = "friendlyid"
 
