@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.com/mariuszs/rust-friendlyid.svg?branch=master)](https://travis-ci.com/mariuszs/rust-friendlyid)
+[![Copr build status](https://copr.fedorainfracloud.org/coprs/mariuszs/rust/package/friendlyid/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/mariuszs/rust/package/friendlyid/)
+
 # friendlyid converter
 The FriendlyID application that converts a given UUID to a URL-friendly ID which is based on Base62
 
@@ -34,9 +36,14 @@ The FriendlyID application that converts a given UUID to a URL-friendly ID which
 
 ## Installation
 
+### Fedora COPR
+
+    $ sudo dnf copr enable mariuszs/rust
+    $ sudo dnf install friendlyid 
+
 ### Build from the source using cargo and rustc
 
-    cargo build --release
+    $ cargo build --release
     
 #### Download binary from github (linux or windows)   
 
