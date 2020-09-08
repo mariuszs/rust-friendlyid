@@ -36,15 +36,14 @@ The FriendlyID application that converts a given UUID to a URL-friendly ID which
 
 ## Installation
 
-### Fedora COPR
+### Fedora - install using package manager
 
     $ sudo dnf copr enable mariuszs/rust
     $ sudo dnf install friendlyid 
 
-### Build from the source using cargo and rustc
+### Install using cargo
 
-    $ cd rust-friendlyid
-    $ cargo install --path . 
+    $ cargo install friendlyid 
     
 #### Download binary from github (linux or windows)   
 
