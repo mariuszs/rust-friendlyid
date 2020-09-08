@@ -13,6 +13,8 @@ keywords = ["uuid", "base62"]
 [profile.release]
 opt-level = 'z'  # Optimize for size.
 lto = true
+codegen-units = 1
+panic = 'abort'
 
 [dependencies]
 uuid = { version = "0.8.1", features = ["v4"] }
