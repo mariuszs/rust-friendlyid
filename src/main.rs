@@ -1,22 +1,20 @@
-use clap::{App, Arg, crate_authors, crate_version};
-use friendly_id;
+use clap::Parser;
 use uuid::Uuid;
 
+#[derive(Parser)]
+#[command(author, version, about = "The FriendlyID library converts a given UUID to a URL-friendly ID which is based on Base62")]
+struct Cli {
+    /// UUID to encode or ID to decode
+    id: Option<String>,
+}
+
 fn main() {
-    let matches = App::new("FriendlyId Converter")
-        .version(crate_version!())
-        .author(crate_authors!("\n"))
-        .about("The FriendlyID library converts a given UUID to a URL-friendly ID which is based on Base62")
-        .arg(Arg::with_name("ID")
-            .help("UUID to encode or ID to decode")
-            .required(false)
-            .index(1))
-        .get_matches();
-    let id = match matches.value_of("ID") {
-        Some(id) => String::from(   convert(id)),
+    let cli = Cli::parse();
+    let id = match cli.id {
+        Some(id) => convert(&id),
         None => create(),
     };
-    println!("{}", id);
+    println!("{id}");
 }
 
 fn create() -> String {
@@ -24,15 +22,21 @@ fn create() -> String {
 }
 
 fn convert(id: &str) -> String {
-    if id.contains("-") {
-        match Uuid::parse_str(&id) {
-            Ok(uuid) => return friendly_id::encode(&uuid),
-            Err(error) => panic!("Invalid uuid '{}': {:?}", id, error)
-        };
+    if id.contains('-') {
+        match Uuid::parse_str(id) {
+            Ok(uuid) => friendly_id::encode(&uuid),
+            Err(error) => {
+                eprintln!("Invalid uuid '{id}': {error:?}");
+                std::process::exit(1);
+            }
+        }
     } else {
         match friendly_id::decode(id) {
-            Ok(uuid) => return uuid.to_string(),
-            Err(error) => panic!("Invalid id '{}': {:?}", id, error)
+            Ok(uuid) => uuid.to_string(),
+            Err(error) => {
+                eprintln!("Invalid id '{id}': {error:?}");
+                std::process::exit(1);
+            }
         }
     }
 }
@@ -43,14 +47,18 @@ mod tests {
 
     #[test]
     fn test_decode() {
-        assert_eq!(convert("5wbwf6yUxVBcr48AMbz9cb"),
-                   "c3587ec5-0976-497f-8374-61e0c2ea3da5");
+        assert_eq!(
+            convert("5wbwf6yUxVBcr48AMbz9cb"),
+            "c3587ec5-0976-497f-8374-61e0c2ea3da5"
+        );
     }
 
     #[test]
     fn test_encode() {
-        assert_eq!(convert("c3587ec5-0976-497f-8374-61e0c2ea3da5"),
-                   "5wbwf6yUxVBcr48AMbz9cb");
+        assert_eq!(
+            convert("c3587ec5-0976-497f-8374-61e0c2ea3da5"),
+            "5wbwf6yUxVBcr48AMbz9cb"
+        );
     }
 
     #[test]
@@ -58,8 +66,3 @@ mod tests {
         assert!(!create().is_empty());
     }
 }
-
-
-
-
-

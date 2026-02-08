@@ -2,7 +2,7 @@
 name = "friendlyid"
 version = "0.3.0"
 authors = ["Mariusz Smykuła <mariusz@devskiller.com>"]
-edition = "2018"
+edition = "2021"
 license = "MIT OR Apache-2.0"
 description = "The FriendlyID tool that converts a given UUID to a URL-friendly ID which is based on Base62"
 repository = "https://github.com/mariuszs/rust-friendlyid"
@@ -20,7 +20,7 @@ panic = 'abort'
 [dependencies]
 uuid = { version = "0.8.1", features = ["v4"] }
 friendly_id = "0.3.0"
-clap = "2.33.3"
+clap = { version = "4", features = ["derive", "cargo"] }
 
 [package.metadata.rpm]
 package = "friendlyid"
