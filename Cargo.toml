@@ -18,8 +18,8 @@ codegen-units = 1
 panic = 'abort'
 
 [dependencies]
-uuid = { version = "0.8.1", features = ["v4"] }
-friendly_id = "0.3.0"
+uuid = { version = "1", features = ["v4"] }
+friendly_id = "0.4.0"
 clap = { version = "4", features = ["derive", "cargo"] }
 
 [package.metadata.rpm]
