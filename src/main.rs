@@ -1,54 +1,53 @@
 use clap::Parser;
+use std::process::ExitCode;
 use uuid::Uuid;
 
 #[derive(Parser)]
-#[command(author, version, about = "The FriendlyID library converts a given UUID to a URL-friendly ID which is based on Base62")]
+#[command(author, version, about = "FriendlyID tool — converts UUIDs to URL-friendly Base62 IDs and vice versa")]
 struct Cli {
-    /// UUID to encode or ID to decode
+    /// UUID to encode, or FriendlyID to decode. Omit to generate a new FriendlyID
+    #[arg(value_name = "UUID|FRIENDLYID")]
     id: Option<String>,
 }
 
-fn main() {
+fn main() -> ExitCode {
     let cli = Cli::parse();
-    let id = match cli.id {
-        Some(id) => convert(&id),
-        None => create(),
-    };
-    println!("{id}");
+    let result = cli
+        .id
+        .map_or_else(|| Ok(friendly_id::create()), |id| convert(&id));
+    match result {
+        Ok(output) => {
+            println!("{output}");
+            ExitCode::SUCCESS
+        }
+        Err(e) => {
+            eprintln!("{e}");
+            ExitCode::FAILURE
+        }
+    }
 }
 
-fn create() -> String {
-    friendly_id::create()
-}
-
-fn convert(id: &str) -> String {
+/// Detects format by presence of `-` (UUIDs always contain hyphens, Base62 never does)
+fn convert(id: &str) -> Result<String, String> {
     if id.contains('-') {
-        match Uuid::parse_str(id) {
-            Ok(uuid) => friendly_id::encode(&uuid),
-            Err(error) => {
-                eprintln!("Invalid uuid '{id}': {error:?}");
-                std::process::exit(1);
-            }
-        }
+        Uuid::parse_str(id)
+            .map(|uuid| friendly_id::encode(&uuid))
+            .map_err(|e| format!("Invalid UUID '{id}': {e}"))
     } else {
-        match friendly_id::decode(id) {
-            Ok(uuid) => uuid.to_string(),
-            Err(error) => {
-                eprintln!("Invalid id '{id}': {error:?}");
-                std::process::exit(1);
-            }
-        }
+        friendly_id::decode(id)
+            .map(|uuid| uuid.to_string())
+            .map_err(|e| format!("Invalid FriendlyID '{id}': {e}"))
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::{convert, create};
+    use super::*;
 
     #[test]
     fn test_decode() {
         assert_eq!(
-            convert("5wbwf6yUxVBcr48AMbz9cb"),
+            convert("5wbwf6yUxVBcr48AMbz9cb").unwrap(),
             "c3587ec5-0976-497f-8374-61e0c2ea3da5"
         );
     }
@@ -56,13 +55,41 @@ mod tests {
     #[test]
     fn test_encode() {
         assert_eq!(
-            convert("c3587ec5-0976-497f-8374-61e0c2ea3da5"),
+            convert("c3587ec5-0976-497f-8374-61e0c2ea3da5").unwrap(),
             "5wbwf6yUxVBcr48AMbz9cb"
         );
     }
 
     #[test]
     fn test_create() {
-        assert!(!create().is_empty());
+        let id = friendly_id::create();
+        assert!(!id.is_empty());
+        assert!(friendly_id::decode(&id).is_ok(), "created ID '{id}' should be decodeable");
+    }
+
+    #[test]
+    fn test_roundtrip() {
+        let uuid = "c3587ec5-0976-497f-8374-61e0c2ea3da5";
+        let encoded = convert(uuid).unwrap();
+        let decoded = convert(&encoded).unwrap();
+        assert_eq!(decoded, uuid);
+    }
+
+    #[test]
+    fn test_uppercase_uuid() {
+        assert_eq!(
+            convert("C3587EC5-0976-497F-8374-61E0C2EA3DA5").unwrap(),
+            "5wbwf6yUxVBcr48AMbz9cb"
+        );
+    }
+
+    #[test]
+    fn test_invalid_uuid() {
+        assert!(convert("not-a-uuid").is_err());
+    }
+
+    #[test]
+    fn test_invalid_friendly_id() {
+        assert!(convert("!!!invalid").is_err());
     }
 }
