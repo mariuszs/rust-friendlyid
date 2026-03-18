@@ -16,9 +16,10 @@ opt-level = 'z'  # Optimize for size.
 lto = true
 codegen-units = 1
 panic = 'abort'
+strip = true
 
 [dependencies]
-uuid = { version = "1", features = ["v4"] }
+uuid = "1"
 friendly_id = "0.4.0"
 clap = { version = "4", features = ["derive", "cargo"] }
 
