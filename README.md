@@ -1,3 +1,4 @@
+[![CI](https://github.com/mariuszs/rust-friendlyid/actions/workflows/ci.yml/badge.svg)](https://github.com/mariuszs/rust-friendlyid/actions/workflows/ci.yml)
 [![Copr build status](https://copr.fedorainfracloud.org/coprs/mariuszs/rust/package/friendlyid/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/mariuszs/rust/package/friendlyid/)
 
 # friendlyid converter
