@@ -35,7 +35,6 @@ jobs:
 
   rpm:
     runs-on: ubuntu-latest
-    needs: build
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -60,8 +59,8 @@ jobs:
           mv artifacts/friendlyid-x86_64-unknown-linux-gnu/friendlyid friendlyid-linux-x86_64
           mv artifacts/friendlyid-x86_64-pc-windows-msvc/friendlyid.exe friendlyid-windows-x86_64.exe
           mv artifacts/friendlyid-rpm/*.rpm .
-      - name: Upload to release
+      - name: Create release and upload assets
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
-        run: gh release upload "$TAG" friendlyid-linux-x86_64 friendlyid-windows-x86_64.exe *.rpm --repo "$GITHUB_REPOSITORY"
+        run: gh release create "$TAG" friendlyid-linux-x86_64 friendlyid-windows-x86_64.exe *.rpm --generate-notes --repo "$GITHUB_REPOSITORY"
