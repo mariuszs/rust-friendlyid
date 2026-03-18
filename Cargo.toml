@@ -23,11 +23,7 @@ uuid = "1"
 friendly_id = "0.4.0"
 clap = { version = "4", features = ["derive"] }
 
-[package.metadata.rpm]
-package = "friendlyid"
-
-[package.metadata.rpm.cargo]
-buildflags = ["--release"]
-
-[package.metadata.rpm.targets]
-friendlyid = { path = "/usr/bin/friendlyid" }
+[package.metadata.generate-rpm]
+assets = [
+    { source = "target/release/friendlyid", dest = "/usr/bin/friendlyid", mode = "755" },
+]
