@@ -12,20 +12,17 @@ struct Cli {
 
 fn main() -> ExitCode {
     let cli = Cli::parse();
-    match cli.id {
-        Some(id) => match convert(&id) {
-            Ok(result) => {
-                println!("{result}");
-                ExitCode::SUCCESS
-            }
-            Err(e) => {
-                eprintln!("{e}");
-                ExitCode::FAILURE
-            }
-        },
-        None => {
-            println!("{}", friendly_id::create());
+    let result = cli
+        .id
+        .map_or_else(|| Ok(friendly_id::create()), |id| convert(&id));
+    match result {
+        Ok(output) => {
+            println!("{output}");
             ExitCode::SUCCESS
+        }
+        Err(e) => {
+            eprintln!("{e}");
+            ExitCode::FAILURE
         }
     }
 }
