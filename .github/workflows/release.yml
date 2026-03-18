@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags: ["[0-9]+.*"]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact: friendlyid
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            artifact: friendlyid.exe
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo build --release
+      - run: cargo test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: friendlyid-${{ matrix.target }}
+          path: target/release/${{ matrix.artifact }}
+
+  rpm:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo install cargo-generate-rpm
+      - run: cargo build --release
+      - run: cargo generate-rpm
+      - uses: actions/upload-artifact@v4
+        with:
+          name: friendlyid-rpm
+          path: target/generate-rpm/*.rpm
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [build, rpm]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+      - name: Prepare release assets
+        run: |
+          mv artifacts/friendlyid-x86_64-unknown-linux-gnu/friendlyid friendlyid-linux-x86_64
+          mv artifacts/friendlyid-x86_64-pc-windows-msvc/friendlyid.exe friendlyid-windows-x86_64.exe
+          mv artifacts/friendlyid-rpm/*.rpm .
+      - name: Upload to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: gh release upload "$TAG" friendlyid-linux-x86_64 friendlyid-windows-x86_64.exe *.rpm --repo "$GITHUB_REPOSITORY"
